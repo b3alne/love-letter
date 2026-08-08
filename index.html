@@ -153,6 +153,8 @@
     border-radius: 12px;
     overflow: hidden;
     box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+    background: #121212;
+    min-height: 152px;
   }
 
   .letter-paper{
@@ -203,12 +205,12 @@
 <script>
 const view = document.getElementById('view');
 
-// 🎵 เปลี่ยนเป็นเพลงที่คุณส่งมาเรียบร้อยแล้ว
+// 🎵 ปรับแต่ง URL ให้สมบูรณ์สำหรับการ Embed บน GitHub
 const SPOTIFY_EMBED_URL = "https://open.spotify.com/embed/track/7G7spu0Ji1Mf9qI4l3wBfu?utm_source=generator";
 
 const LETTER = `เค้าคิดนานมากว่าจะส่งให้ดีมั้ย แต่ส่งไว้ดีกว่า อยากให้เราจบกันด้วยดี แล้วอยากให้เธอเข้าใจ ด้วยว่าจริงๆแล้วเค้ารู้สึก กับ เธอแค่ไหน เค้ารักม่อนนะ
 
-เธอไม่ต้องตอบอะไรเค้าก็ได้ แต่เค้าอยากให้เธอรักตัวเองนะอ้วน
+เธอไม่ต้องตอบอะไรเค้าก็ได้ แต่เค้าอยากให้เธอรักตัวเองนะอ้วน ไม่อยากให้เธอทำร้ายตัวเองเลย ตอนนี้เค้าไม่รู้ว่าเธอเป็นยังไงบ้าง
 
 เค้ามาขอโทษที่เค้าเคยทำ ที่เค้าใจร้ายกับเธอไปเยอะมาก เค้ารักใครมากๆก็งี่เง่าแบบนี้ตลอด แต่เค้าไม่เคยเอ็นดูใครเท่าเธอเลยนะ ถ้าไม่รักเค้าคงไม่งี่เง่าใส่เธอขนาดนี้ เค้าคงไม่ลืมเธอเหมือนกัน
 
@@ -299,7 +301,7 @@ function renderLetter(){
   view.innerHTML = `
     <div class="letter-wrap" id="letterWrap">
       <div class="spotify-box">
-        <iframe src="${SPOTIFY_EMBED_URL}" width="100%" height="152" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+        <iframe src="${SPOTIFY_EMBED_URL}" width="100%" height="152" frameborder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy" style="border-radius:12px;"></iframe>
       </div>
       <div class="letter-paper">
         <div class="msg">${escapeHtml(LETTER)}</div>
