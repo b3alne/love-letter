@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>จดหมายถึงม่อนน</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Taviraj:wght@400;500;600&family=Mali:wght@300;400;500;600&family=Kanit:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --parchment:#F3F1F8;
+    --parchment-deep:#E4E1F0;
+    --lavender:#C7BFE8;
+    --lavender-deep:#7A6FB0;
+    --sage:#A9C6B8;
+    --ink:#48435E;
+    --ink-soft:#83809E;
+    --gold:#C7A96B;
+    --paper:#FBFAF6;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html,body{height:100%;}
+  body{
+    font-family:'Mali', sans-serif;
+    background:
+      radial-gradient(circle at 12% 15%, rgba(138,150,120,.16) 0%, transparent 42%),
+      radial-gradient(circle at 88% 85%, rgba(201,143,138,.22) 0%, transparent 48%),
+      var(--parchment);
+    color:var(--ink);
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:24px;
+    overflow-x:hidden;
+    position:relative;
+  }
+
+  .petals{position:fixed; inset:0; pointer-events:none; z-index:0; overflow:hidden;}
+  .petals span{
+    position:absolute; top:-6%;
+    width:9px; height:14px; border-radius:60% 10% 60% 10%;
+    background:var(--lavender); opacity:.3;
+    animation:drift 16s linear infinite;
+  }
+  .petals span:nth-child(2){ background:var(--sage); }
+  .petals span:nth-child(1){left:10%; animation-delay:0s;}
+  .petals span:nth-child(2){left:28%; animation-delay:4s; transform:scale(.8);}
+  .petals span:nth-child(3){left:52%; animation-delay:8s;}
+  .petals span:nth-child(4){left:71%; animation-delay:2s; transform:scale(1.1);}
+  .petals span:nth-child(5){left:90%; animation-delay:6s; background:var(--sage); transform:scale(.7);}
+  @keyframes drift{
+    to{ transform:translateY(120vh) rotate(200deg); opacity:0; }
+  }
+  @media (prefers-reduced-motion: reduce){
+    .petals span{animation:none; display:none;}
+  }
+
+  .stage{ position:relative; z-index:1; width:100%; max-width:460px; }
+
+  .card{
+    background:var(--paper);
+    border-radius:20px;
+    padding:34px 30px;
+    box-shadow:0 22px 50px -20px rgba(62,47,43,.35);
+    border:1px solid rgba(255,255,255,.5);
+  }
+
+  h1.brand{
+    font-family:'Taviraj', serif;
+    font-weight:600;
+    font-size:2rem;
+    text-align:center;
+    color:var(--lavender-deep);
+    line-height:1.2;
+  }
+  p.tagline{
+    text-align:center;
+    font-size:.85rem;
+    color:var(--ink-soft);
+    margin-top:8px;
+    margin-bottom:8px;
+    letter-spacing:.02em;
+  }
+
+  /* ---- closed envelope scene ---- */
+  .closed-scene{ text-align:center; padding-top:14px; }
+  .badge{
+    width:132px; height:132px; margin:20px auto 10px;
+    cursor:pointer;
+    animation:bob 3.2s ease-in-out infinite;
+    transition:transform .15s ease;
+  }
+  .badge:hover{ transform:scale(1.05); }
+  @keyframes bob{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-7px); } }
+  @media (prefers-reduced-motion: reduce){
+    .badge{ animation:none; }
+  }
+
+  .open-btn{
+    margin-top:6px;
+    background:linear-gradient(135deg, #9B8CF0, #6FCBEA);
+    color:#fff; border:none; border-radius:14px;
+    padding:13px 26px; font-family:'Kanit', sans-serif; font-size:.94rem; font-weight:500;
+    cursor:pointer; letter-spacing:.02em;
+    box-shadow:0 10px 22px -10px rgba(111,167,234,.6);
+    transition:transform .15s ease;
+  }
+  .open-btn:hover{ transform:translateY(-1px); }
+  .hint{ font-size:.72rem; color:var(--ink-soft); margin-top:10px; }
+
+  /* ---- confirm-yourself scene ---- */
+  .confirm-scene{ text-align:center; padding:20px 0 4px; }
+  .confirm-scene .question{
+    font-family:'Mali', sans-serif; font-size:1.05rem; line-height:1.65;
+    color:var(--ink); margin-bottom:30px; padding:0 6px;
+  }
+  .dodge-row{
+    position:relative; height:130px; max-width:300px; margin:0 auto;
+  }
+  .btn-yes, .btn-no{
+    position:absolute; top:50%; left:50%;
+    font-family:'Kanit', sans-serif; border:none; border-radius:14px;
+    cursor:pointer;
+  }
+  .btn-yes{
+    transform:translate(calc(-100% - 8px), -50%);
+    background:linear-gradient(135deg, #9B8CF0, #6FCBEA);
+    color:#fff; padding:12px 22px; font-size:.94rem;
+    box-shadow:0 10px 20px -10px rgba(111,167,234,.6);
+    transition:transform .28s cubic-bezier(.34,1.56,.64,1);
+    z-index:2;
+  }
+  .btn-no{
+    transform:translate(8px, -50%);
+    background:#fff; color:var(--ink-soft);
+    border:1.5px solid var(--ink-soft);
+    padding:10px 18px; font-size:.86rem;
+    transition:left .22s ease, top .22s ease, transform .22s ease;
+    z-index:3;
+  }
+
+  /* ---- letter reveal ---- */
+  .letter-wrap{ opacity:0; transform:translateY(10px); }
+  .letter-wrap.show{
+    animation:reveal .7s ease forwards;
+  }
+  @keyframes reveal{ to{ opacity:1; transform:translateY(0); } }
+
+  .letter-paper{
+    background:var(--paper);
+    background-image:repeating-linear-gradient(var(--paper) 0 28px, var(--parchment-deep) 29px);
+    border:1px solid #e6d8c4;
+    border-radius:10px;
+    padding:24px 22px 22px;
+    margin-top:6px;
+    box-shadow:0 14px 30px -16px rgba(62,47,43,.35);
+  }
+  .letter-paper .msg{
+    font-family:'Mali', sans-serif;
+    font-size:1.04rem; line-height:1.95; white-space:pre-wrap;
+    color:var(--ink);
+  }
+  .flower-mark{ text-align:center; margin-top:20px; opacity:.8; }
+  .flower-mark svg{ width:30px; height:30px; }
+
+  .back-link{
+    display:inline-flex; align-items:center; gap:6px;
+    background:none; border:none; cursor:pointer;
+    font-family:'Kanit', sans-serif; font-size:.8rem;
+    color:var(--ink-soft); margin-top:20px;
+    padding:0;
+  }
+  .back-link:hover{ color:var(--lavender-deep); }
+</style>
+</head>
+<body>
+
+<div class="petals" aria-hidden="true">
+  <span></span><span></span><span></span><span></span><span></span>
+</div>
+
+<div class="stage">
+  <div class="card">
+    <h1 class="brand">จดหมายถึงม่อนน</h1>
+    <p class="tagline">เค้าตั้งใจพิมพ์ทุกคำเลย เธอต้องตั้งใจอ่านนะ ✉︎</p>
+    <div id="view"></div>
+  </div>
+</div>
+
+<script>
+const view = document.getElementById('view');
+
+const LETTER = "เค้าคิดนานมากว่าจะส่งให้ดีมั้ย แต่ส่งไว้ดีกว่าอยากให้เราจบกันด้วยดี แล้วอยากให้เธอเข้าใจ ด้วยว่าจริงๆแล้วเค้ารู้สึก กับ เธอแค่ไหน เค้ารักม่อนนะ\n\nเธอไม่ต้องตอบอะไรเค้าก็ได้แต่เค้าอยากให้เธอรักตัวเองนะอ้วนไม่อยากให้เธอทำร้ายตัวเองเลย ตอนนี้เค้าไม่รู้ว่าเธอเป็นยังไงบ้าง\n\nเค้ามาขอโทษที่เค้าเคยทำที่เค้าใจร้ายกับเธอไปเยอะมาก เค้ารักใครมากๆก็งี่เง่าแบบนี้ตลอด แต่เค้าไม่เคยเอ็นดูใครเท่าเธอเลยนะ ถ้าไม่รักเค้าคงไม่งี่เง่าใส่เธอขนาดนี้ เค้าคงไม่ลืมเธอเหมือนกัน\n\nแค่นี้แหละที่อยากบอก รักม่อนนะไไไไ\n\nเค้าไม่เคยคิดว่าเค้าจะได้ดอกไม้เลย ขอโทษที่รับไว้ไม่ได้ เค้าอยากรักเธอ แต่เค้าคิดมากที่เธอเข้าดิส มันอยู่ในหัวตลอด\n\nเราน่าจะรักน่าเจอกันตั้งแต่เด็กๆ เค้าจะได้ค่อยบ่นเธออะไรที่มันไม่ดี เค้ารักอ้วน อยากกอด ขอโทษที่ปากไม่ดีมาตลอด TT";
+
+function escapeHtml(str){
+  const d = document.createElement('div');
+  d.textContent = str;
+  return d.innerHTML;
+}
+
+const badgeSvg = `<svg viewBox="0 0 100 100" fill="none">
+<defs>
+  <linearGradient id="badgeEdge" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#9B8CF0"/>
+    <stop offset="1" stop-color="#6FCBEA"/>
+  </linearGradient>
+</defs>
+<rect x="4" y="4" width="92" height="92" rx="24" fill="#FBFAF6" stroke="url(#badgeEdge)" stroke-width="5"/>
+<rect x="21" y="34" width="58" height="38" rx="6" fill="#E4E1F0" stroke="#7A6FB0" stroke-width="2.5"/>
+<path d="M22 35 L50 56 L78 35" stroke="#7A6FB0" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M50 47c3-4.4 9.5-4.4 9.5 1.4 0 5.6-9.5 10.8-9.5 10.8s-9.5-5.2-9.5-10.8c0-5.8 6.5-5.8 9.5-1.4z" fill="#E5484D"/>
+</svg>`;
+
+const flowerSvg = `<svg viewBox="0 0 32 32" fill="none"><g stroke="#7A6FB0" stroke-width="1.2">
+<ellipse cx="16" cy="10" rx="3.4" ry="5" fill="#C7BFE8" fill-opacity=".6"/>
+<ellipse cx="16" cy="10" rx="3.4" ry="5" fill="#C7BFE8" fill-opacity=".6" transform="rotate(72 16 16)"/>
+<ellipse cx="16" cy="10" rx="3.4" ry="5" fill="#C7BFE8" fill-opacity=".6" transform="rotate(144 16 16)"/>
+<ellipse cx="16" cy="10" rx="3.4" ry="5" fill="#C7BFE8" fill-opacity=".6" transform="rotate(216 16 16)"/>
+<ellipse cx="16" cy="10" rx="3.4" ry="5" fill="#C7BFE8" fill-opacity=".6" transform="rotate(288 16 16)"/>
+<circle cx="16" cy="16" r="2.4" fill="#C7A96B" stroke="none"/>
+<path d="M16 18 L15 27" stroke="#A9C6B8" fill="none"/>
+</g></svg>`;
+
+function renderClosed(){
+  view.innerHTML = `
+    <div class="closed-scene">
+      <div class="badge" id="badge">${badgeSvg}</div>
+      <button class="open-btn" id="openBtn">เปิดอ่านจดหมาย 🤍</button>
+      <div class="hint">แตะไอคอนหรือกดปุ่มเพื่อเปิดอ่าน</div>
+    </div>
+  `;
+  const badge = document.getElementById('badge');
+  const openBtn = document.getElementById('openBtn');
+  badge.addEventListener('click', renderConfirm);
+  openBtn.addEventListener('click', renderConfirm);
+}
+
+function renderConfirm(){
+  view.innerHTML = `
+    <div class="confirm-scene">
+      <p class="question">เธออย่าลืมรักตัวเองเยอะๆนะ เข้าใจมั้ย</p>
+      <div class="dodge-row" id="dodgeRow">
+        <button class="btn-yes" id="btnYes">ใช่</button>
+        <button class="btn-no" id="btnNo">ไม่</button>
+      </div>
+    </div>
+  `;
+  const row = document.getElementById('dodgeRow');
+  const btnYes = document.getElementById('btnYes');
+  const btnNo = document.getElementById('btnNo');
+  let dodges = 0;
+
+  const dodge = () => {
+    dodges++;
+    const rect = row.getBoundingClientRect();
+    const bw = btnNo.offsetWidth, bh = btnNo.offsetHeight;
+    const x = Math.random() * Math.max(rect.width - bw, 10);
+    const y = Math.random() * Math.max(rect.height - bh, 10);
+    btnNo.style.left = x + 'px';
+    btnNo.style.top = y + 'px';
+    btnNo.style.transform = 'none';
+
+    const scale = 1 + dodges * 0.25;
+    btnYes.style.transform = `translate(calc(-100% - 8px), -50%) scale(${scale})`;
+    btnYes.style.zIndex = 5;
+  };
+
+  btnNo.addEventListener('click', (e) => { e.preventDefault(); dodge(); });
+  btnYes.addEventListener('click', renderLetter);
+}
+
+function renderLetter(){
+  view.innerHTML = `
+    <div class="letter-wrap" id="letterWrap">
+      <div class="letter-paper">
+        <div class="msg">${escapeHtml(LETTER)}</div>
+        <div class="flower-mark">${flowerSvg}</div>
+      </div>
+      <button class="back-link" id="back">← ปิดจดหมาย</button>
+    </div>
+  `;
+  requestAnimationFrame(() => {
+    document.getElementById('letterWrap').classList.add('show');
+  });
+  document.getElementById('back').onclick = renderClosed;
+}
+
+renderClosed();
+</script>
+</body>
+</html>
