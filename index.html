@@ -61,7 +61,7 @@
   .card{
     background:var(--paper);
     border-radius:20px;
-    padding:34px 30px;
+    padding:34px 24px;
     box-shadow:0 22px 50px -20px rgba(62,47,43,.35);
     border:1px solid rgba(255,255,255,.5);
   }
@@ -147,18 +147,30 @@
   }
   @keyframes reveal{ to{ opacity:1; transform:translateY(0); } }
 
+  .spotify-box {
+    margin-top: 14px;
+    margin-bottom: 12px;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+  }
+
   .letter-paper{
     background:var(--paper);
     background-image:repeating-linear-gradient(var(--paper) 0 28px, var(--parchment-deep) 29px);
     border:1px solid #e6d8c4;
     border-radius:10px;
-    padding:24px 22px 22px;
+    padding:20px 18px;
     margin-top:6px;
     box-shadow:0 14px 30px -16px rgba(62,47,43,.35);
   }
   .letter-paper .msg{
     font-family:'Mali', sans-serif;
-    font-size:1.04rem; line-height:1.95; white-space:pre-wrap;
+    font-size:0.95rem; 
+    line-height:28px; 
+    white-space:pre-wrap;
+    word-break:break-word;
+    overflow-wrap:break-word;
     color:var(--ink);
   }
   .flower-mark{ text-align:center; margin-top:20px; opacity:.8; }
@@ -191,7 +203,20 @@
 <script>
 const view = document.getElementById('view');
 
-const LETTER = "เค้าคิดนานมากว่าจะส่งให้ดีมั้ย แต่ส่งไว้ดีกว่าอยากให้เราจบกันด้วยดี แล้วอยากให้เธอเข้าใจ ด้วยว่าจริงๆแล้วเค้ารู้สึก กับ เธอแค่ไหน เค้ารักม่อนนะ\n\nเธอไม่ต้องตอบอะไรเค้าก็ได้แต่เค้าอยากให้เธอรักตัวเองนะอ้วนไม่อยากให้เธอทำร้ายตัวเองเลย ตอนนี้เค้าไม่รู้ว่าเธอเป็นยังไงบ้าง\n\nเค้ามาขอโทษที่เค้าเคยทำที่เค้าใจร้ายกับเธอไปเยอะมาก เค้ารักใครมากๆก็งี่เง่าแบบนี้ตลอด แต่เค้าไม่เคยเอ็นดูใครเท่าเธอเลยนะ ถ้าไม่รักเค้าคงไม่งี่เง่าใส่เธอขนาดนี้ เค้าคงไม่ลืมเธอเหมือนกัน\n\nแค่นี้แหละที่อยากบอก รักม่อนนะไไไไ\n\nเค้าไม่เคยคิดว่าเค้าจะได้ดอกไม้เลย ขอโทษที่รับไว้ไม่ได้ เค้าอยากรักเธอ แต่เค้าคิดมากที่เธอเข้าดิส มันอยู่ในหัวตลอด\n\nเราน่าจะรักน่าเจอกันตั้งแต่เด็กๆ เค้าจะได้ค่อยบ่นเธออะไรที่มันไม่ดี เค้ารักอ้วน อยากกอด ขอโทษที่ปากไม่ดีมาตลอด TT";
+// 🎵 เปลี่ยนเป็นเพลงที่คุณส่งมาเรียบร้อยแล้ว
+const SPOTIFY_EMBED_URL = "https://open.spotify.com/embed/track/7G7spu0Ji1Mf9qI4l3wBfu?utm_source=generator";
+
+const LETTER = `เค้าคิดนานมากว่าจะส่งให้ดีมั้ย แต่ส่งไว้ดีกว่า อยากให้เราจบกันด้วยดี แล้วอยากให้เธอเข้าใจ ด้วยว่าจริงๆแล้วเค้ารู้สึก กับ เธอแค่ไหน เค้ารักม่อนนะ
+
+เธอไม่ต้องตอบอะไรเค้าก็ได้ แต่เค้าอยากให้เธอรักตัวเองนะอ้วน
+
+เค้ามาขอโทษที่เค้าเคยทำ ที่เค้าใจร้ายกับเธอไปเยอะมาก เค้ารักใครมากๆก็งี่เง่าแบบนี้ตลอด แต่เค้าไม่เคยเอ็นดูใครเท่าเธอเลยนะ ถ้าไม่รักเค้าคงไม่งี่เง่าใส่เธอขนาดนี้ เค้าคงไม่ลืมเธอเหมือนกัน
+
+แค่นี้แหละที่อยากบอก รักม่อนนะไไไไ
+
+เค้าไม่เคยคิดว่าเค้าจะได้ดอกไม้เลย ขอโทษที่รับไว้ไม่ได้ เค้าอยากรักเธอ แต่เค้าคิดมากที่เธอเข้าดิส มันอยู่ในหัวตลอด
+
+เราน่าจะรักน่าเจอกันตั้งแต่เด็กๆ เค้าจะได้ค่อยบ่นเธออะไรที่มันไม่ดี เค้ารักอ้วน อยากกอด ขอโทษที่ปากไม่ดีมาตลอด TT`;
 
 function escapeHtml(str){
   const d = document.createElement('div');
@@ -273,6 +298,9 @@ function renderConfirm(){
 function renderLetter(){
   view.innerHTML = `
     <div class="letter-wrap" id="letterWrap">
+      <div class="spotify-box">
+        <iframe src="${SPOTIFY_EMBED_URL}" width="100%" height="152" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+      </div>
       <div class="letter-paper">
         <div class="msg">${escapeHtml(LETTER)}</div>
         <div class="flower-mark">${flowerSvg}</div>
